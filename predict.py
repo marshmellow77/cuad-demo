@@ -14,7 +14,6 @@ from transformers.data.metrics.squad_metrics import compute_predictions_logits
 
 def run_prediction(question_texts, context_text):
     model_name_or_path = "./cuad-models/roberta-base/"
-    output_dir = ""
 
     def to_list(tensor):
         return tensor.detach().cpu().tolist()
