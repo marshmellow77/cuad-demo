@@ -4,3 +4,4 @@ cuad-training/
 __pycache__/
 temp/
 .ipynb_checkpoints/
+streamlit/
