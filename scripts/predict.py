@@ -13,7 +13,12 @@ from transformers.data.processors.squad import SquadResult, SquadV2Processor, Sq
 from transformers.data.metrics.squad_metrics import compute_predictions_logits
 
 def run_prediction(question_texts, context_text):
-    model_name_or_path = "./cuad-models/roberta-base/"
+	n_best_size = 1
+	max_answer_length = 512
+	do_lower_case = False
+	null_score_diff_threshold = 0.0
+
+    model_name_or_path = "../cuad-models/roberta-base/"
 
     def to_list(tensor):
         return tensor.detach().cpu().tolist()
@@ -85,24 +90,20 @@ def run_prediction(question_texts, context_text):
                 result = SquadResult(unique_id, start_logits, end_logits)
                 all_results.append(result)
 
-    output_prediction_file = "predictions.json"
-    output_nbest_file = "nbest_predictions.json"
-    output_null_log_odds_file = "null_predictions.json"
-
-    predictions = compute_predictions_logits(
-        examples,
-        features,
-        all_results,
-        1, # n_best_size
-        512, # max_answer_length
-        False, # do_lower_case
-        None, # output_prediction_file,
-        None, # output_nbest_file,
-        None, # output_null_log_odds_file,
-        False,  # verbose_logging
-        True,  # version_2_with_negative
-        0.0, # null_score_diff_threshold
-        tokenizer
+    final_predictions = compute_predictions_logits(
+		all_examples=examples,
+		all_features=features,
+		all_results=all_results,
+		n_best_size=n_best_size,
+		max_answer_length=max_answer_length,
+		do_lower_case=do_lower_case,
+		output_prediction_file=None,
+		output_nbest_file=None,
+		output_null_log_odds_file=None,
+		verbose_logging=False,
+		version_2_with_negative=True,
+		null_score_diff_threshold=null_score_diff_threshold,
+		tokenizer=tokenizer
     )
 
-    return predictions
+    return final_predictions
