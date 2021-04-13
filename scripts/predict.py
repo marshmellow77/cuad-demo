@@ -12,23 +12,27 @@ from transformers import (
 from transformers.data.processors.squad import SquadResult, SquadV2Processor, SquadExample
 from transformers.data.metrics.squad_metrics import compute_predictions_logits
 
-def run_prediction(question_texts, context_text):
+def run_prediction(question_texts, context_text, model_path):
+	### Setting hyperparameters
+	max_seq_length = 512
+	doc_stride = 256
 	n_best_size = 1
+	max_query_length = 64
 	max_answer_length = 512
 	do_lower_case = False
 	null_score_diff_threshold = 0.0
 
-    model_name_or_path = "../cuad-models/roberta-base/"
+    # model_name_or_path = "../cuad-models/roberta-base/"
 
     def to_list(tensor):
         return tensor.detach().cpu().tolist()
 
     config_class, model_class, tokenizer_class = (
         AutoConfig, AutoModelForQuestionAnswering, AutoTokenizer)
-    config = config_class.from_pretrained(model_name_or_path)
+    config = config_class.from_pretrained(model_path)
     tokenizer = tokenizer_class.from_pretrained(
-        model_name_or_path, do_lower_case=True, use_fast=False)
-    model = model_class.from_pretrained(model_name_or_path, config=config)
+        model_path, do_lower_case=True, use_fast=False)
+    model = model_class.from_pretrained(model_path, config=config)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -52,9 +56,9 @@ def run_prediction(question_texts, context_text):
     features, dataset = squad_convert_examples_to_features(
         examples=examples,
         tokenizer=tokenizer,
-        max_seq_length=512,
-        doc_stride=256,
-        max_query_length=64,
+        max_seq_length=max_seq_length,
+        doc_stride=doc_stride,
+        max_query_length=max_query_length,
         is_training=False,
         return_dataset="pt",
         threads=1,
