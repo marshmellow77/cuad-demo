@@ -13,14 +13,14 @@ from transformers.data.processors.squad import SquadResult, SquadV2Processor, Sq
 from transformers.data.metrics.squad_metrics import compute_predictions_logits
 
 def run_prediction(question_texts, context_text, model_path):
-	### Setting hyperparameters
-	max_seq_length = 512
-	doc_stride = 256
-	n_best_size = 1
-	max_query_length = 64
-	max_answer_length = 512
-	do_lower_case = False
-	null_score_diff_threshold = 0.0
+    ### Setting hyperparameters
+    max_seq_length = 512
+    doc_stride = 256
+    n_best_size = 1
+    max_query_length = 64
+    max_answer_length = 512
+    do_lower_case = False
+    null_score_diff_threshold = 0.0
 
     # model_name_or_path = "../cuad-models/roberta-base/"
 
@@ -95,19 +95,19 @@ def run_prediction(question_texts, context_text, model_path):
                 all_results.append(result)
 
     final_predictions = compute_predictions_logits(
-		all_examples=examples,
-		all_features=features,
-		all_results=all_results,
-		n_best_size=n_best_size,
-		max_answer_length=max_answer_length,
-		do_lower_case=do_lower_case,
-		output_prediction_file=None,
-		output_nbest_file=None,
-		output_null_log_odds_file=None,
-		verbose_logging=False,
-		version_2_with_negative=True,
-		null_score_diff_threshold=null_score_diff_threshold,
-		tokenizer=tokenizer
+        all_examples=examples,
+        all_features=features,
+        all_results=all_results,
+        n_best_size=n_best_size,
+        max_answer_length=max_answer_length,
+        do_lower_case=do_lower_case,
+        output_prediction_file=None,
+        output_nbest_file=None,
+        output_null_log_odds_file=None,
+        verbose_logging=False,
+        version_2_with_negative=True,
+        null_score_diff_threshold=null_score_diff_threshold,
+        tokenizer=tokenizer
     )
 
     return final_predictions
